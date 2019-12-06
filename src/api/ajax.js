@@ -10,7 +10,6 @@ const ajax = (url,data={},type="GET") => {
     })
     if(type==="GET"){
         paramsStr=paramsStr.substring(0,paramsStr.length-1);
-        console.log(paramsStr)
         if(paramsStr){
             return axios.get(`${url}?${paramsStr}`)
         }else{

@@ -1,17 +1,60 @@
 import React from 'react'
 import {Switch,Route,Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
-import Jober from '../../contains/jober/jober'
-import Boss from '../../contains/boss/boss'
 import BossInfo from '../boss-info/boss-info'
 import JoberInfo from '../jober-info/jober-info'
 import Cookie from 'js-cookie'
 import {getUser} from '../../store/action' 
 import judgePath from '../../util/index'
+import Header from '../../components/header/header'
+import Footer from '../../components/footer/footer'
+
+// page
+import Jober from '../../contains/jober/jober'
+import Boss from '../../contains/boss/boss'
+import Message from '../message/message'
+import Personal from '../personal/personal'
+import Chat from '../chat/chat'
+// import NotFound from '../../components/404/404not_found'
 class Main extends React.Component {
     constructor(props){
         super(props)
-        this.state={}
+        this.state={
+            navList:[
+                {
+                    title:'Jober',
+                    icon:require('../../assets/img/home.png'),
+                    selectedIcon:require('../../assets/img/home-selected.png'),
+                    selected:'/jober',
+                    show:true,
+                    component:Jober
+                },
+                {
+                    title:'Boss',
+                    icon:require('../../assets/img/home.png'),
+                    selectedIcon:require('../../assets/img/home-selected.png'),
+                    selected:'/boss',
+                    show:true,
+                    component:Boss
+                },
+                {
+                    title:'消息',
+                    icon:require('../../assets/img/message.png'),
+                    selectedIcon:require('../../assets/img/message-selected.png'),
+                    selected:'/message',
+                    show:true,
+                    component:Message
+                },
+                {
+                    title:'个人',
+                    icon:require('../../assets/img/personal.png'),
+                    selectedIcon:require('../../assets/img/personal-selected.png'),
+                    selected:'/personal',
+                    show:true,
+                    component:Personal
+                }
+            ]
+        }
     }
     componentDidMount() {
         const userid = Cookie.get('userid')
@@ -23,6 +66,7 @@ class Main extends React.Component {
     render() {
         const userid = Cookie.get('userid')
         const {header,type,_id} = this.props.user
+        const {navList} = this.state
         let path = this.props.location.pathname
         if(!userid){
             return <Redirect to="/login" />
@@ -30,20 +74,35 @@ class Main extends React.Component {
         if(!_id){
             return null
         }else {
-            console.log(this.props.user)
             if(path==='/') {
                 path = judgePath(type, header)
-                console.log(path)
+                return <Redirect to={path} />
             }
         }
+        if(type === 'jober'){
+            navList[1].show=false;
+        }else if(type === 'boss'){
+            navList[0].show=false;
+        }
+        const h_f_show = navList.find(item => item.selected===path)
         return (
-            <Switch>
-                <Route path="/jober" component={Jober} />
-                <Route path="/boss" component={Boss} />
-                <Route path="/bossinfo" component={BossInfo} />
-                <Route path="/joberinfo" component={JoberInfo} />
-                <Redirect to={path} />
-            </Switch>
+            <div>
+                {
+                    h_f_show?<Header title={h_f_show.title} />:null
+                }
+                <Switch>
+                    {/* <Route component={NotFound} /> */}
+                    {navList.filter(item => item.show).map(item => {
+                        return <Route key={item.title} path={item.selected} component={item.component} />
+                    })}
+                    <Route path="/bossinfo" component={BossInfo} />
+                    <Route path="/joberinfo" component={JoberInfo} />
+                    <Route path="/chat/:id" component={Chat} />
+                </Switch>
+                {
+                    h_f_show?<Footer navList={navList} />:null
+                }
+            </div>
         )
     }
 }

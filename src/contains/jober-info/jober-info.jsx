@@ -5,7 +5,8 @@ import {
     WingBlank,
     InputItem,
     TextareaItem,
-    Button 
+    Button,
+    Toast 
 } from 'antd-mobile'
 import HeaderSelect from '../../components/header-select/header-select'
 import {connect} from 'react-redux'
@@ -20,9 +21,11 @@ class JoberInfo extends React.Component {
             skill:''
         }
     }
-    // componentDidUpdate(){
-    //     console.log(this.props.user)
-    // }
+    componentDidUpdate(prevProps) {
+        if(prevProps.msg!==this.props.msg){
+            Toast.info(this.props.msg)
+        }
+    }
     setHeader = (header) => {
         this.setState({
             header
@@ -35,6 +38,7 @@ class JoberInfo extends React.Component {
     }
     save = () => {
         this.props.update(this.state)
+        console.log(1)
     }
     render() {
         const {header} =this.props.user
@@ -66,6 +70,6 @@ class JoberInfo extends React.Component {
 }
 
 export default connect(
-    state => ({user:state.user}),
+    state => ({user:state.user,msg:state.user.msg}),
     {update}
 )(JoberInfo)
