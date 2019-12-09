@@ -9,7 +9,8 @@ import {
     LOGIN_OUT,
     GET_USERLIST,
     INIT_CHAT,
-    NEW_CHAT
+    NEW_CHAT,
+    READ_MSG
 } from './action-type'
 
 // user reducers 用户信息管理
@@ -62,14 +63,28 @@ const initChat={
                 return {
                     data:action.data.data,
                     users:action.data.users,
-                    unRead:0
+                    unRead:action.data.data.reduce((init,item) => {
+                        return init+(item.to===action.userid&&!item.read?1:0)
+                    },0)
                 }
             case NEW_CHAT:
                 return {
                     data:[...state.data,action.data],
                     users:state.users,
-                    unRead:state.unRead
+                    unRead:state.unRead+(action.data.to===action.userid&&!action.data.read?1:0)
                 }
+            case READ_MSG: 
+                return {
+                    data:state.data.map(item => {
+                        if(action.data.from===item.from&&action.data.to===item.to&&!item.read){
+                            return {...item,read:true}
+                        }else{
+                            return item
+                        }
+                    }),
+                    users:state.users,
+                    unRead:state.unRead-action.data.count
+                }    
             default :
             return state
         }

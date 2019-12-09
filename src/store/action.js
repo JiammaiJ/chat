@@ -6,7 +6,8 @@ import {
     LOGIN_OUT,
     GET_USERLIST,
     INIT_CHAT,
-    NEW_CHAT
+    NEW_CHAT,
+    READ_MSG
 } from './action-type'
 
 // api
@@ -16,7 +17,8 @@ import {
     reqUpdate,
     reqGetUser,
     reqGetUserList,
-    reqGetMsgList
+    reqGetMsgList,
+    reqReadMsg
 } from '../api/index'
 
 
@@ -33,9 +35,13 @@ import {
     export const getuserlist = (data) => ({type:GET_USERLIST,data:data})
 
 // 初始化聊天数据存储
-    export const initchat = (data) => ({type:INIT_CHAT,data:data})
+    export const initchat = (data,userid) => ({type:INIT_CHAT,data:data,userid:userid})
 // new chat
-    export const newchat = (data) => ({type:NEW_CHAT,data:data})
+    export const newchat = (data,userid) => ({type:NEW_CHAT,data:data,userid:userid})
+
+// 消息已读的action 
+    export const readmsg = (data) => ({type:READ_MSG,data:data})
+
 // login action
     export const login = (data) => {
         const {username,password} = data
@@ -129,12 +135,11 @@ import {
 // 初始化socket.io
     function initIO(dispatch,userid) {
         if(!io.socket){
-            io.socket = io('ws://192.168.6.177:5000')
+            io.socket = io('ws://localhost:5000')
             io.socket.on('receiveMsg',(data) => {
                 if(userid === data.from || userid === data.to){
-                    dispatch(newchat(data))
+                    dispatch(newchat(data,userid))
                 }
-                console.log(data)
             })
         }
     }
@@ -150,5 +155,15 @@ async function initGetMsg(dispatch,userid) {
     initIO(dispatch,userid)
     const response = await reqGetMsgList()
     const result = response.data
-    return dispatch(initchat(result.data))
+    return dispatch(initchat(result.data,userid))
 }
+
+// 消息改为已读
+export const readMsg = (data) => {
+    const {from,to} = data
+    return async dispatch => {
+        const response = await reqReadMsg({from,to})
+        const result = response.data
+        dispatch(readmsg({from,to,count:result.data}))
+    }
+} 

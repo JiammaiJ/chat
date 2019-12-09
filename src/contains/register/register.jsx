@@ -55,7 +55,7 @@ class Register extends React.Component {
         this.props.register(this.state)
     }
     goLogin = () => {
-        this.props.history.replace('/login')
+        this.props.history.replace('/userlogin')
     }
     render() {
         return (

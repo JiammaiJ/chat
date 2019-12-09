@@ -13,8 +13,8 @@ class App extends React.Component {
     render() {
         return (
             <Switch>
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
+                <Route path="/userlogin" component={Login} />
+                <Route path="/userregister" component={Register} />
                 <Route component={Main} />
             </Switch>
         )

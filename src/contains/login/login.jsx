@@ -47,7 +47,7 @@ class Login extends React.Component {
     }
     goRegister = () => {
         console.log(this.props)
-        this.props.history.replace('/register')
+        this.props.history.replace('/userregister')
     }
     render() {
         return (

@@ -41,7 +41,9 @@ class Boss extends React.Component {
         return (
             <div>
                     <WingBlank style={{marginTop:'50px',marginBottom:'50px'}}>
+                   
                         {content}
+
                     </WingBlank>
             </div>
         )

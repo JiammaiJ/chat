@@ -22,7 +22,7 @@ class Main extends React.Component {
         this.state={
             navList:[
                 {
-                    title:'Jober',
+                    title:'职位列表',
                     icon:require('../../assets/img/home.png'),
                     selectedIcon:require('../../assets/img/home-selected.png'),
                     selected:'/jober',
@@ -30,7 +30,7 @@ class Main extends React.Component {
                     component:Jober
                 },
                 {
-                    title:'Boss',
+                    title:'求职列表',
                     icon:require('../../assets/img/home.png'),
                     selectedIcon:require('../../assets/img/home-selected.png'),
                     selected:'/boss',
@@ -69,7 +69,7 @@ class Main extends React.Component {
         const {navList} = this.state
         let path = this.props.location.pathname
         if(!userid){
-            return <Redirect to="/login" />
+            return <Redirect to="/userlogin" />
         }
         if(!_id){
             return null
@@ -100,7 +100,7 @@ class Main extends React.Component {
                     <Route path="/chat/:id" component={Chat} />
                 </Switch>
                 {
-                    h_f_show?<Footer navList={navList} />:null
+                    h_f_show?<Footer navList={navList} unRead={this.props.unRead} />:null
                 }
             </div>
         )
@@ -108,6 +108,6 @@ class Main extends React.Component {
 }
 
 export default connect(
-    state => ({user:state.user}),
+    state => ({user:state.user,unRead:state.chat.unRead}),
     {getUser}
 )(Main)

@@ -19,3 +19,5 @@
     export const INIT_CHAT ='INIT_CHAT'
 // socket io 获取到的最新的聊天信息
     export const NEW_CHAT ='NEW_CHAT'
+// 修改消息为已读消息
+    export const READ_MSG = 'READ_MSG'

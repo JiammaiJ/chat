@@ -30,20 +30,20 @@ class Personal extends React.Component {
           ])
     }
     render() {
+        const { user } = this.props
        return(
            <div style={{marginTop:'50px',marginBottom:'50px'}}>
                <Result 
-                    img={<img src={require('../../assets/img/h4.png')} alt="img" style={{width:'50px',height:'50px'}} />}
-                    title="jober1"
-                    message={<div>compony</div>}
+                    img={user.header?<img src={require(`../../assets/img/${user.header}.png`)} alt="img" style={{width:'50px',height:'50px'}} />:null}
+                    title={user.username}
+                    message={user.company?<div>{user.company}</div>:null}
                />
                 <List renderHeader={() => '基本信息'}>
                         <Item>
-                            <Brief>1:123</Brief>
-                            <Brief>1:123</Brief>
-                            <Brief>1:123</Brief>
-                            <Brief>1:123</Brief>
-                            <Brief>1:123</Brief>
+                            {user.company?<Brief>公司:{user.company}</Brief>:null}
+                            {user.salary?<Brief>薪资:{user.salary}</Brief>:null}
+                            {user.post?<Brief>岗位:{user.post}</Brief>:null}
+                            {user.skill?<Brief>技能:{user.skill}</Brief>:null}
                         </Item>
                 </List>
                 <WingBlank>
@@ -56,6 +56,6 @@ class Personal extends React.Component {
 }
 
 export default connect(
-    state => ({}),
+    state => ({user:state.user}),
     {loginout}
 )(Personal)

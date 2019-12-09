@@ -10,11 +10,15 @@ class Footer extends React.Component {
         this.state={
         }
     }
+    componentDidUpdate(){
+      
+    }
     render() {
         const path = this.props.location.pathname
         const content = this.props.navList.filter(item => item.show).map(item => {
             return (
                 <TabBar.Item
+                    badge={item.selected==='/message'?this.props.unRead:0}
                     key={item.title}
                     title={item.title}
                     icon={{uri:item.icon}}
